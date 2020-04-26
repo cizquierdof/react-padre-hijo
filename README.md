@@ -1,68 +1,39 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Control de padres desde los hijos
 
-## Available Scripts
+Aquí tenemos dos componentes, el padre que contiene al componente hijo. En el componente padre definimos una función **metodoPadre** que lanza un *alert(saludo)*, el valor de saludo recibe el argumento *respuesta* que es enviado desde el componente hijo.
 
-In the project directory, you can run:
+Para conseguir esto lo que hacemos es enviarle al componente hijo el método que queremos que ejecute, en este caso es *metodoPadre*. En el componente hijo utilizaremos cualquier evento, en este caso he utilizado el evento **onClick**, para que dispare la ejecución del método.
 
-### `npm start`
+## Puntualizaciones
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- En el componente padre hay que enviar el método, no la ejecución del método. Esto quiere decir que le debemos pasar el nombre del método sin los paréntesis.
+- el método debe definirse en forma de función arrow, es decir de la forma:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```javascript
+nombreMetodo=(args)=>{
+    //aquí el código a ejecutar
+}
+```
 
-### `npm test`
+- Según he leido, esta forma es aun, experimental, pero funciona en la mayoría de los casos, Si queremos escribir el método de forma normal:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```javascript
+metodoPadre = function (args){
+    //aquí el código a ejecutar
+}
+```
 
-### `npm run build`
+Entonces tenemos que enlacar el método en el costructor. Despues de los state que tengamos ponemos:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```javascript
+        this.metodoPadre = this.metodoPadre.bind(this);
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- Por último si desde el componente hijo queremos pasar argumentos a *metodoPadre*, es necesario asignarlo como función flecha en el evento, así:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```jsx
+            <button className='hijo' onClick={()=>this.props.metodoPadre(saludo)}>
+```
 
-### `npm run eject`
+De esta forma podemos inyectar desde el hijo argumentos a un método que se ejecutará en el componente padre. En este caso le mandamos el string: 'soy el hijo' que solo está en la constante *saludo* del componente hijo. Fijate que el padre no tiene definido en ninguna parte el string ' soy el hijo', esta solo está en el hijo, y gracias a este mecanismo se ppuede utilizar en el padre.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
